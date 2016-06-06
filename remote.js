@@ -13,6 +13,9 @@ var alexa = require('alexa-app'),
 // Define an alexa-app
 var app = new alexa.app('remote');
 
+var fan = 0;
+var air = 1;
+
 app.launch(function(req, res) {
     console.log("Launching the application");
 });
@@ -211,7 +214,7 @@ app.intent('TurnOffTV',
     function (req, res) {
         res.say('Turning TV off!');
         console.log('Turning TV off!');
-        execCmd('TV', 'PowerOff', 1, function (res) {
+        execCmd('SharpTV', 'PowerToggle', 1, function (res) {
             console.log("Command TV PowerOff executed with result : " + res);
         });
     });
@@ -224,21 +227,24 @@ app.intent('TurnOnTV',
     function (req, res) {
         res.say('Turning TV on!');
         console.log('Turning TV on!');
-        execCmd('TV', 'PowerOn', 1, function (res) {
+        execCmd('SharpTV', 'PowerToggle', 1, function (res) {
             console.log("Command TV PowerOn executed with result : " + res);
         });
     });
 
-app.intent('SelectPlaystation',
+app.intent('AppleTV',
     {
         "slots" : {},
-        "utterances" : ["{select|} {playstation}"]
+        "utterances" : ["{Turn on Apple TV | Warm Up | Apple TV On }"]
     },
     function (req, res) {
-        res.say('Selecting ps4!');
-        console.log('Selecting ps4!');
-        execCmd('TV', 'InputHdmi1', 1, function (res) {
-            console.log("Command TV InputHdmi1 executed with result : " + res);
+        res.say('Apple TV On!');
+        console.log('Apple TV On!');
+        execCmd('SharpTV', 'PowerToggle', 1, function (res) {
+            console.log("Command TV On executed with result : " + res);
+        });
+        execCmd('AppleTV', 'Power', 1, function (res) {
+            console.log("Command Apple TV On executed with result : " + res);
         });
     });
 
@@ -412,7 +418,7 @@ app.intent('PcDisplay',
 app.intent('WindowFanSpeed',
     {
         "slots" : {},
-        "utterances" : ["{Window Fan on|turn on Window Fan|Window Fan off |Change Window Fan speed | Window Fan speed }"]
+        "utterances" : ["{Change Window Fan speed | Window Fan speed change}"]
     },
     function (req, res) {
         res.say('Window Fan Speed changed');
@@ -420,6 +426,157 @@ app.intent('WindowFanSpeed',
         execCmd('WindowFan', 'Power', 1, function (res) {
             console.log("Command Window Fan Speed executed with result : " + res);
         });
+    });
+
+app.intent('WindowFanOff',
+    {
+        "slots" : {},
+        "utterances" : ["{Window Fan Off|Fan Off}"]
+    },
+    function (req, res) {
+        switch (fan){
+            case 1:
+                res.say('Window Fan off');
+                console.log('Window Fan off!');
+                execCmd('WindowFan', 'Power', 3, function (res) {
+                    console.log("Command Window Fan Speed executed with result : " + res);
+                });
+                fan = 0;
+                break; 
+            case 2:
+                res.say('Window Fan off');
+                console.log('Window Fan off!');
+                execCmd('WindowFan', 'Power', 2, function (res) {
+                    console.log("Command Window Fan Speed executed with result : " + res);
+                });
+                fan = 0;
+                break; 
+            case 3:
+                res.say('Window Fan off');
+                console.log('Window Fan off!');
+                execCmd('WindowFan', 'Power', 1, function (res) {
+                    console.log("Command Window Fan Speed executed with result : " + res);
+                });
+                fan = 0;
+                break;      
+        }
+    });
+
+app.intent('WindowFanSpeedLow',
+    {
+        "slots" : {},
+        "utterances" : ["{Window Fan Low|Window Fan Speed Low | Fan Low | Fan on | window Fan on | turn on window fan}"]
+    },
+    function (req, res) {
+        switch (fan){
+            case 0:
+                res.say('Window Fan Speed Low');
+                console.log('Window Fan Speed Low!');
+                execCmd('WindowFan', 'Power', 1, function (res) {
+                    console.log("Command Window Fan Speed executed with result : " + res);
+                });
+                fan = 1;
+                break; 
+            case 0:
+                res.say('Window Fan Speed Low Already');
+                console.log('Window Fan Speed Low!');
+                fan = 1;
+                break;  
+            case 2:
+                res.say('Window Fan Speed Low');
+                console.log('Window Fan Speed Low!');
+                execCmd('WindowFan', 'Power', 3, function (res) {
+                    console.log("Command Window Fan Speed executed with result : " + res);
+                });
+                fan = 1;
+                break; 
+            case 3:
+                res.say('Window Fan Speed Low');
+                console.log('Window Fan Speed Low!');
+                execCmd('WindowFan', 'Power', 2, function (res) {
+                    console.log("Command Window Fan Speed executed with result : " + res);
+                });
+                fan = 1;
+                break;      
+        }
+    });
+
+app.intent('WindowFanSpeedMid',
+    {
+        "slots" : {},
+        "utterances" : ["{Window Fan Middle|Window Fan Speed Middle | Fan Middle}"]
+    },
+    function (req, res) {
+        switch (fan){
+            case 0:
+                res.say('Window Fan Speed Mid');
+                console.log('Window Fan Speed Mid!');
+                execCmd('WindowFan', 'Power', 2, function (res) {
+                    console.log("Command Window Fan Speed executed with result : " + res);
+                });
+                fan = 2;
+                break;
+            case 1:
+                res.say('Window Fan Speed Mid');
+                console.log('Window Fan Speed Mid!');
+                execCmd('WindowFan', 'Power', 1, function (res) {
+                    console.log("Command Window Fan Speed executed with result : " + res);
+                });
+                fan = 2;
+                break;
+            case 2:
+                res.say('Window Fan Speed Mid Already');
+                console.log('Window Fan Speed Mid!');
+                fan = 2;
+                break;
+            case 3:
+                res.say('Window Fan Speed Mid');
+                console.log('Window Fan Speed Mid!');
+                execCmd('WindowFan', 'Power', 3, function (res) {
+                    console.log("Command Window Fan Speed executed with result : " + res);
+                });
+                fan = 2;
+                break;       
+        }
+    });
+
+app.intent('WindowFanSpeedHigh',
+    {
+        "slots" : {},
+        "utterances" : ["{Window Fan High|Window Fan Speed High | Fan High}"]
+    },
+    function (req, res) {
+        switch (fan){
+            case 0:
+                res.say('Window Fan Speed High');
+                console.log('Window Fan Speed High!');
+                execCmd('WindowFan', 'Power', 3, function (res) {
+                    console.log("Command Window Fan Speed executed with result : " + res);
+                });
+                fan = 3;
+                break; 
+            case 1:
+                res.say('Window Fan Speed High');
+                console.log('Window Fan Speed High!');
+                execCmd('WindowFan', 'Power', 2, function (res) {
+                    console.log("Command Window Fan Speed executed with result : " + res);
+                });
+                fan = 3;
+                break; 
+            case 2:
+                res.say('Window Fan Speed High');
+                console.log('Window Fan Speed High!');
+                execCmd('WindowFan', 'Power', 1, function (res) {
+                    console.log("Command Window Fan Speed executed with result : " + res);
+                });
+                fan = 3;
+                break;  
+            case 3:
+                res.say('Window Fan Speed High Already');
+                console.log('Window Fan Speed High!');
+                fan = 3;
+                break;    
+        }
     });
 
 app.intent('WindowFanMode',
@@ -446,6 +603,99 @@ app.intent('WindowFanAirFlow',
         execCmd('WindowFan', 'Airflow', 1, function (res) {
             console.log("Command Window Fan AirFlow executed with result : " + res);
         });
+    });
+
+app.intent('WindowFanAirIn',
+    {
+        "slots" : {},
+        "utterances" : ["{Window Fan Air In| Fan Air Flow In| Air In }"]
+    },
+    function (req, res) {
+        switch (air){
+            case 1:
+                res.say('Window Fan AirFlow In Already');
+                console.log('Window Fan AirFlow In!');
+                air = 1;
+                break;
+            case 2:
+                res.say('Window Fan AirFlow In');
+                console.log('Window Fan AirFlow In!');
+                execCmd('WindowFan', 'Airflow', 2, function (res) {
+                    console.log("Command Window Fan AirFlow executed with result : " + res);
+                });
+                air = 1;
+                break;
+            case 3:
+                res.say('Window Fan AirFlow In');
+                console.log('Window Fan AirFlow In!');
+                execCmd('WindowFan', 'Airflow', 1, function (res) {
+                    console.log("Command Window Fan AirFlow executed with result : " + res);
+                });
+                air = 1;
+                break;
+        }
+    });
+
+app.intent('WindowFanAirOut',
+    {
+        "slots" : {},
+        "utterances" : ["{Window Fan Air Out| Fan Air Flow Out| Air Out }"]
+    },
+    function (req, res) {
+        switch (air){
+            case 1:
+                res.say('Window Fan AirFlow Out');
+                console.log('Window Fan AirFlow Out!');
+                execCmd('WindowFan', 'Airflow', 1, function (res) {
+                    console.log("Command Window Fan AirFlow executed with result : " + res);
+                });
+                air = 2;
+                break;
+            case 2:
+                res.say('Window Fan AirFlow Out Already');
+                console.log('Window Fan AirFlow In!');
+                air = 2;
+                break;
+            case 3:
+                res.say('Window Fan AirFlow Out');
+                console.log('Window Fan AirFlow Out!');
+                execCmd('WindowFan', 'Airflow', 2, function (res) {
+                    console.log("Command Window Fan AirFlow executed with result : " + res);
+                });
+                air = 2;
+                break;
+        }
+    });
+
+app.intent('WindowFanAirExchange',
+    {
+        "slots" : {},
+        "utterances" : ["{Window Fan Air Exchange| Fan Air Flow Exchange| Air Exchange }"]
+    },
+    function (req, res) {
+        switch (air){
+            case 1:
+                res.say('Window Fan AirFlow Exchange');
+                console.log('Window Fan AirFlow Exchange!');
+                execCmd('WindowFan', 'Airflow', 2, function (res) {
+                    console.log("Command Window Fan AirFlow executed with result : " + res);
+                });
+                air = 3;
+                break;
+            case 2:
+                res.say('Window Fan AirFlow Exchange');
+                console.log('Window Fan AirFlow Exchange!');
+                execCmd('WindowFan', 'Airflow', 1, function (res) {
+                    console.log("Command Window Fan AirFlow executed with result : " + res);
+                });
+                air = 3;
+                break;
+            case 3:
+                res.say('Window Fan AirFlow Exchange Already');
+                console.log('Window Fan AirFlow Exchange!');
+                air = 3;
+                break;
+        }
     });
 
 app.intent('IncreaseWindowFanTemp',
