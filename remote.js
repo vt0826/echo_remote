@@ -145,20 +145,23 @@ app.pre = function(req, res, type) {
     }
 };
 
-app.intent('MuteVolume',
+
+// TV
+
+app.intent('SharpTVMute',
     {
         "slots" : {},
-        "utterances" : ["{mute|quiet|shut up|unmute}"]
+        "utterances" : ["{mute TV |unmute TV | TV mute | TV unmute}"]
     },
     function (req, res) {
         res.say('Muting!');
         console.log('Muting!');
-        execCmdCurrentActivity('Volume,Mute', 1, function (res) {
-            console.log("Command Mute executed with result : " + res);
+        execCmd('SharpTV', 'Mute', 1, function (res) {
+            console.log("Command TV Mute executed with result : " + res);
         });
     });
 
-app.intent('IncreaseTVVolume',
+app.intent('IncreaseSharpTVVolume',
     {
         "slots" : {'AMOUNT' : 'NUMBER'},
         "utterances" : ["{increase|} TV volume by {1-9|AMOUNT}"]
@@ -168,14 +171,17 @@ app.intent('IncreaseTVVolume',
         if (isNaN(amt)) {
             amt = 1;
         }
+        if (amt > 10) {
+            amt = 10;
+        }
         res.say('Increasing TV volume by ' + amt);
         console.log('Increasing volume by ' + amt);
-        execCmd('TV', 'VolumeUp', amt, function (res) {
+        execCmd('SharpTV', 'VolumeUp', amt, function (res) {
             console.log("Command Volume UP was executed with result : " + res);
         });
     });
 
-app.intent('DecreaseTVVolume',
+app.intent('DecreaseSharpTVVolume',
     {
         "slots" : {'AMOUNT' : 'NUMBER'},
         "utterances" : ["{decrease TV volume|reduce TV volume} by {1-9|AMOUNT}"]
@@ -185,6 +191,9 @@ app.intent('DecreaseTVVolume',
         if (isNaN(amt)) {
             amt = 1;
         }
+        if (amt > 10) {
+            amt = 10;
+        }
         res.say('Decreasing TV volume by ' + amt);
         console.log('Decreasing volume by ' + amt);
         execCmd('TV', 'VolumeDown', amt, function (res) {
@@ -192,24 +201,10 @@ app.intent('DecreaseTVVolume',
         });
     });
 
-app.intent('MuteTVVolume',
-    {
-        "slots" : {},
-        "utterances" : ["{mute|unmute} {TV|telivision}"]
-    },
-    function (req, res) {
-        res.say('Muting TV!');
-        console.log('Muting!');
-        execCmd('TV', 'Mute', 1, function (res) {
-            console.log("Command Mute executed with result : " + res);
-        });
-    });
-
-
 app.intent('TurnOffTV',
     {
         "slots" : {},
-        "utterances" : ["{turn the TV off|turn TV off}"]
+        "utterances" : ["{turn the TV off|turn TV off| TV off}"]
     },
     function (req, res) {
         res.say('Turning TV off!');
@@ -222,7 +217,7 @@ app.intent('TurnOffTV',
 app.intent('TurnOnTV',
     {
         "slots" : {},
-        "utterances" : ["{turn on the TV|turn the TV on|turn on TV|turn TV on}"]
+        "utterances" : ["{turn on the TV|turn the TV on|turn on TV|turn TV on |TV on}"]
     },
     function (req, res) {
         res.say('Turning TV on!');
@@ -231,8 +226,130 @@ app.intent('TurnOnTV',
             console.log("Command TV PowerOn executed with result : " + res);
         });
     });
+app.intent('ChangeTVInputNext',
+    {
+        "slots" : {},
+        "utterances" : ["{ Next input | TV input Next | Next TV Input}"]
+    },
+    function (req, res) {
+        res.say('TV input changed!');
+        console.log('TV input changed!');
+        execCmd('SharpTV', 'Input', 1, function (res) {
+            console.log("Command TV Input changed executed with result : " + res);
+        });
+    });
+app.intent('ChangeTVInput',
+    {
+        "slots" : {},
+        "utterances" : ["{Change TV |input change | change TV input |change input | TV input}"]
+    },
+    function (req, res) {
+        res.say('TV input changed!');
+        console.log('TV input changed!');
+        execCmd('SharpTV', 'Input', 2, function (res) {
+            console.log("Command TV Input changed executed with result : " + res);
+        });
+    });
+app.intent('ChangeTVInputThree',
+    {
+        "slots" : {},
+        "utterances" : ["{Change TV input three |input change three| change input three | TV input three}"]
+    },
+    function (req, res) {
+        res.say('TV input changed!');
+        console.log('TV input changed!');
+        execCmd('SharpTV', 'Input', 3, function (res) {
+            console.log("Command TV Input changed executed with result : " + res);
+        });
+    });
+app.intent('ChangeTVInputAppleToCable',
+    {
+        "slots" : {},
+        "utterances" : ["{Change TV input to Cable |cable input| change input cable | TV input cable}"]
+    },
+    function (req, res) {
+        res.say('TV input changed!');
+        console.log('TV input changed!');
+        execCmd('SharpTV', 'Input', 6, function (res) {
+            console.log("Command TV Input changed executed with result : " + res);
+        });
+    });
 
-app.intent('AppleTV',
+//Fio TV
+app.intent('DVROn',
+    {
+        "slots" : {},
+        "utterances" : ["{Turn on Cable | Cable On | Turn Cable On }"]
+    },
+    function (req, res) {
+        res.say('Cable On!');
+        console.log('Cable On!');
+        execCmd('DVR', 'PowerToggle', 1, function (res) {
+            console.log("Command DVR On executed with result : " + res);
+        });
+        execCmd('SharpTV', 'PowerToggle', 1, function (res) {
+            console.log("Command TV On executed with result : " + res);
+        });
+    });
+
+app.intent('DVROff',
+    {
+        "slots" : {},
+        "utterances" : ["{Turn off Cable | Cable Off | Turn Cable Off }"]
+    },
+    function (req, res) {
+        res.say('Cable Off!');
+        console.log('Cable Off!');
+        execCmd('DVR', 'PowerToggle', 1, function (res) {
+            console.log("Command DVR Off executed with result : " + res);
+        });
+        execCmd('SharpTV', 'PowerToggle', 1, function (res) {
+            console.log("Command TV Off executed with result : " + res);
+        });
+    });
+
+app.intent('DVRChannelUp',
+    {
+        "slots" : {},
+        "utterances" : ["{Channel Up | Cable Channel up | TV channel up }"]
+    },
+    function (req, res) {
+        res.say('Channel Up!');
+        console.log('Channel Up!');
+        execCmd('DVR', 'ChannelUp', 1, function (res) {
+            console.log("Command DVR Channel Up executed with result : " + res);
+        });
+    });
+
+app.intent('DVRChannelDown',
+    {
+        "slots" : {},
+        "utterances" : ["{Channel Down | Cable Channel Down | TV channel Down }"]
+    },
+    function (req, res) {
+        res.say('Channel Down!');
+        console.log('Channel Down!');
+        execCmd('DVR', 'ChannelDown', 1, function (res) {
+            console.log("Command DVR Channel Down executed with result : " + res);
+        });
+    });
+
+app.intent('DVRChannelPrevious',
+    {
+        "slots" : {},
+        "utterances" : ["{Channel Go back| go back | Previous channel }"]
+    },
+    function (req, res) {
+        res.say('Channel going back!');
+        console.log('Channel going back!');
+        execCmd('DVR', 'ChannelPrev', 1, function (res) {
+            console.log("Command DVR Channel Previous executed with result : " + res);
+        });
+    });
+
+
+//Apple TV 
+app.intent('AppleTVOn',
     {
         "slots" : {},
         "utterances" : ["{Turn on Apple TV | Warm Up | Apple TV On }"]
@@ -248,12 +365,28 @@ app.intent('AppleTV',
         });
     });
 
+app.intent('AppleTVOff',
+    {
+        "slots" : {},
+        "utterances" : ["{Turn off Apple TV | Apple TV Off }"]
+    },
+    function (req, res) {
+        res.say('Apple TV Off!');
+        console.log('Apple TV Off!');
+        execCmd('SharpTV', 'PowerToggle', 1, function (res) {
+            console.log("Command TV Off executed with result : " + res);
+        });
+        execCmd('AppleTV', 'Home', 1, function (res) {
+            console.log("Command Apple TV Off executed with result : " + res);
+        });
+    });
+
 // Sony Reciver
 
 app.intent('SpeakerOn',
     {
         "slots" : {},
-        "utterances" : ["{Speaker|start Speaker|Speaker on| turn speaker on}"]
+        "utterances" : ["{Speaker|start Speaker|Speaker on| turn speaker on| turn on speaker}"]
     },
     function (req, res) {
         res.say('Turning on Speaker!');
@@ -266,7 +399,7 @@ app.intent('SpeakerOn',
 app.intent('SpeakerOff',
     {
         "slots" : {},
-        "utterances" : ["{Speaker|Turn off Speaker|Speaker off| shut down Speaker}"]
+        "utterances" : ["{Speaker|Turn off Speaker|Turn Speaker Off |Speaker off| shut down Speaker}"]
     },
     function (req, res) {
         res.say('Turning off Speaker!');
@@ -332,7 +465,7 @@ app.intent('MuteSpeaker',
 app.intent('SpeakerInputOne',
     {
         "slots" : {},
-        "utterances" : ["{speaker input one| give me speaker input one }"]
+        "utterances" : ["{speaker input one| give me speaker input one | speaker video one }"]
     },
     function (req, res) {
         res.say('Speaker input one!');
@@ -345,7 +478,7 @@ app.intent('SpeakerInputOne',
 app.intent('SpeakerInputTwo',
     {
         "slots" : {},
-        "utterances" : ["{speaker input two| give me speaker input two }"]
+        "utterances" : ["{speaker input two| give me speaker input two | speaker video two }"]
     },
     function (req, res) {
         res.say('Speaker input two!');
@@ -431,7 +564,7 @@ app.intent('WindowFanSpeed',
 app.intent('WindowFanOff',
     {
         "slots" : {},
-        "utterances" : ["{Window Fan Off|Fan Off}"]
+        "utterances" : ["{Window Fan Off|Fan Off|turn off window fan|turn Window fan off}"]
     },
     function (req, res) {
         switch (fan){
@@ -465,7 +598,7 @@ app.intent('WindowFanOff',
 app.intent('WindowFanSpeedLow',
     {
         "slots" : {},
-        "utterances" : ["{Window Fan Low|Window Fan Speed Low | Fan Low | Fan on | window Fan on | turn on window fan}"]
+        "utterances" : ["{Window Fan Low|Window Fan Speed Low | Fan Low | Fan on | window Fan on | turn on window fan| turn window fan on}"]
     },
     function (req, res) {
         switch (fan){
@@ -738,7 +871,7 @@ app.intent('DecreaseWindowFanTemp',
         });
     });
 
-/////
+/*
 app.intent('TurnOff',
     {
         "slots" : {},
@@ -766,20 +899,7 @@ app.intent('Movie',
         });
     });
 
-
-
-app.intent('Music',
-    {
-        "slots" : {},
-        "utterances" : ["{music|start music}"]
-    },
-    function (req, res) {
-        res.say('Turning on Music Mode!');
-        console.log('Turning on Music Mode!');
-        execActivity('Listen to Digital Music', function (res) {
-            console.log("Command to Music executed with result : " + res);
-        });
-    });
+*/
 
 /**
  * Creates an intent function for a specific channel configuration
