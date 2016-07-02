@@ -196,7 +196,7 @@ app.intent('DecreaseSharpTVVolume',
         }
         res.say('Decreasing TV volume by ' + amt);
         console.log('Decreasing volume by ' + amt);
-        execCmd('TV', 'VolumeDown', amt, function (res) {
+        execCmd('SharpTV', 'VolumeDown', amt, function (res) {
             console.log("Command Volume Down was executed with result : " + res);
         });
     });
@@ -378,6 +378,19 @@ app.intent('AppleTVOff',
         });
         execCmd('AppleTV', 'Home', 1, function (res) {
             console.log("Command Apple TV Off executed with result : " + res);
+        });
+    });
+
+app.intent('AppleTVSelect',
+    {
+        "slots" : {},
+        "utterances" : ["{ Select | Go ahead }"]
+    },
+    function (req, res) {
+        res.say('Apple TV selected!');
+        console.log('Apple TV selected!');
+        execCmd('AppleTV', 'Select', 1, function (res) {
+            console.log("Command Apple TV Select executed with result : " + res);
         });
     });
 
