@@ -94,5 +94,4 @@ Alexa tell remote to power everything off
 
 Alexa tell remote to watch TBS
 (note this will also turn on the required activity)
-# echo_remote
-# echo_remote
+
